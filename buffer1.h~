@@ -1,6 +1,4 @@
 //gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
-//Buffer1.c : v1.0 (version 1.0)
-//git version 1.7.9.5
 
 #include<stdio.h>
 #include<stdlib.h>
