@@ -333,3 +333,29 @@ int cpytoBuffer(buffer *b,char *tuple){
 	}
 	return -1;
 }
+int seekFiles(char *tableName)
+{
+	char temp[256];
+	int numberOfTables;
+	FILE *dictionary = fopen("fs_dictionary.dat","r+");
+	if(dictionary == NULL)
+		return -2;//Retorna 1 se o arquivo de dicionario de dados não foi encontrado.
+	fread(&numberOfTables,sizeof(int),1,dictionary);
+	char stringData[50];
+	int tableID = 37;
+	int i,j,breakPoint = 0;
+	for(i = 0; i < numberOfTables; i++)
+	{
+		for(j = 0;breakPoint == 0; j++)
+		{
+			fread(&stringData[j],1,1,dictionary);
+			if(stringData[j] == '\0')
+				breakPoint = j;
+		}
+		breakPoint = 0;
+		fread(&tableID,sizeof(int),1,dictionary);
+		if(strcmp(stringData,tableName) == 0)
+			return tableID;//Caso a tabela seja encontrada ele retorna o ID da mesma.
+	}
+	return -1;//Quer dizer que a tabela não foi encontrada no dicionário de dados
+}

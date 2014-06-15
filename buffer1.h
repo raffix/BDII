@@ -52,5 +52,6 @@ int bufferpool(buffer *b, char *arqMeta, char *arqDados); //lê o metadado e os 
 void concatString(char *string1, char *string2, int pos); //Junta duas strings 
 int cpytoBuffer(buffer *b,char *tuple); //Copia uma tupla para o buffer
 char *aloca(char *fn); //Aloca um vetor
+int seekFiles(char *tableName);//Localiza qual o ID da tabela, para abrir os arquivos corretos.
 
 

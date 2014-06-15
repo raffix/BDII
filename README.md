@@ -53,3 +53,30 @@ int cpytoBuffer(buffer *b,char *tuple) : A função procura no bufferpool uma p�
 
 Para o funcionamento do programa as funções void inicializaBuffer(buffer *p) e int bufferpool(buffer *b, char *arqMeta,char *arqDados),
 devem ser chamadas na main.
+
+
+
+
+
+Novo estruturamento dos arquivos de dicionario de dados:
+
+#fs_dictionary.dat
+--------------------------------
+NUMBEROFTABLES (INT) 4 //No início do arquivo
+TABLENAME (STRING) 50 BYTES | TABLEID (INT) 4 BYTES //No resto do arquivo deverá ter uma linha nesse formato para cada tabela do banco de dados
+
+#fs_metafile{CONSTNUMBER}.dat
+CONTINUA MESMA ESTRUTURA DO META.DAT
+
+#fs_datafile{CONSTNUMBER}.dat
+CONTINUA MESMA ESTRUTURA DO DATA.DAT
+
+OBS: {CONSTNUMBER} se refere ao número que cada tabela tem perante o dicionário de dados.
+
+Testes:
+
+Para testar o programa, utilize o comando ./main <nome da tabela>
+Estão disponíveis duas tabelas para teste.
+teste1
+teste2
+OBS: As duas tabelas são semelhantes, mas não identicas.
