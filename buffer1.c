@@ -371,8 +371,10 @@ int insertTable(char *tableName){
 	numberOfTables++;
 	rewind(dictionary);
 	fwrite(numberOfTables,sizeof(int),1,dictionary);
+	fseek(dictionary,0,SEEK_END);
+	//Escreve string
 	//Cria arquivos de meta e dados
 	
 	//retorna o indice da tabela
-	
+
 }
