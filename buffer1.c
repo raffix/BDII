@@ -359,3 +359,20 @@ int seekFiles(char *tableName)
 	}
 	return -1;//Quer dizer que a tabela não foi encontrada no dicionário de dados
 }
+
+//Criação de arquivos de dados e metadados.
+int insertTable(char *tableName){
+	//Abra dicionario e insere nova tabela 
+	int numberOfTables;
+	FILE *dictionary = fopen("fs_dictionary.dat","r+");
+	if(dictionary == NULL)
+		return -2;//Retorna 1 se o arquivo de dicionario de dados não foi encontrado.
+	fread(&numberOfTables,sizeof(int),1,dictionary);
+	numberOfTables++;
+	rewind(dictionary);
+	fwrite(numberOfTables,sizeof(int),1,dictionary);
+	//Cria arquivos de meta e dados
+	
+	//retorna o indice da tabela
+	
+}

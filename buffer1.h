@@ -54,4 +54,5 @@ int cpytoBuffer(buffer *b,char *tuple); //Copia uma tupla para o buffer
 char *aloca(char *fn); //Aloca um vetor
 int seekFiles(char *tableName);//Localiza qual o ID da tabela, para abrir os arquivos corretos.
 
+//Funções para criação de tabelas
 
