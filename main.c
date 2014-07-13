@@ -12,6 +12,9 @@ int main(int argc, char *argv[]){
 	bufpool=(buffer*)malloc(sizeof(buffer)*NUMP); //Aloca bufferpool com o Tamanho da constante NUMP
 	inicializaBuffer(bufpool);//os valores da estrutura sao inicializados 
 	int fileIndex = seekFiles(nomeTabela);//Procura indice para abrir os arquivos da tabela
+	if(fileIndex==-1){
+		fileIndex=insertTable(nomeTabela);
+	}
 	if(fileIndex < 0)
 	{
 		if(fileIndex == -1)

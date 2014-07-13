@@ -56,3 +56,4 @@ int seekFiles(char *tableName);//Localiza qual o ID da tabela, para abrir os arq
 
 //Funções para criação de tabelas
 
+int insertTable(char *tableName); //Cria arquivos de dados e metadados 

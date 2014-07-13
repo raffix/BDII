@@ -224,7 +224,7 @@ int bufferpool(buffer *b, char *arqMeta,char *arqDados){
 
 		if(!p){
 			//retorna se encontrar erro ao abrir o arquivo
-			return -1;
+			return -5;
 		}
 		
 		int l = 0;
@@ -269,7 +269,7 @@ int bufferpool(buffer *b, char *arqMeta,char *arqDados){
 
 		if(!p){
 			//retorna se encontrar erro ao abrir o arquivo
-			return -1;
+			return -5;
 
         }
 		int g = 0;
@@ -363,18 +363,47 @@ int seekFiles(char *tableName)
 //Criação de arquivos de dados e metadados.
 int insertTable(char *tableName){
 	//Abra dicionario e insere nova tabela 
-	int numberOfTables;
+	int numberOfTables,counter,size_string;
 	FILE *dictionary = fopen("fs_dictionary.dat","r+");
 	if(dictionary == NULL)
 		return -2;//Retorna 1 se o arquivo de dicionario de dados não foi encontrado.
 	fread(&numberOfTables,sizeof(int),1,dictionary);
-	numberOfTables++;
+	
+	printf("\n number : %d \n",numberOfTables);
+	numberOfTables=numberOfTables+1;
+	printf("\n number : %d \n",numberOfTables);
 	rewind(dictionary);
-	fwrite(numberOfTables,sizeof(int),1,dictionary);
+
+	fwrite(&numberOfTables,sizeof(int),1,dictionary);
 	fseek(dictionary,0,SEEK_END);
 	//Escreve string
+	size_string=strlen(tableName);
+	strcat(tableName,"\0");
+	printf("\n size_string %d \n",size_string);
+	for(counter=0;counter<size_string; counter++){
+		fwrite(&tableName[counter],sizeof(char),1,dictionary);
+	}
+	fwrite("\0",sizeof(char),1,dictionary);
+	fclose(dictionary);
+	int id=seekFiles(tableName);
+	printf("\n %d \n ",id);
 	//Cria arquivos de meta e dados
-	
-	//retorna o indice da tabela
+	char *strMeta,*strData;
+	printf("\n passou \n");
+	sprintf(strMeta, "fs_metafile%d.dat",id);
+	printf("\n passou \n");
+	sprintf(strData, "fs_datafile%d.dat",id);
+	printf("\n passou \n");
+	FILE *metadados = fopen(strMeta,"w+");
+	FILE *data = fopen(strData,"w+");
+	if(metadados==NULL || data==NULL){
+		return -3;
+		printf("\n é tetra \n");
+	}
+	printf("\n passou \n");
+	fclose(metadados);
 
+	fclose(data);
+	return id;
+	//retorna o indice da tabela
 }
