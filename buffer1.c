@@ -349,12 +349,14 @@ int seekFiles(char *tableName)
 		for(j = 0;breakPoint == 0; j++)
 		{
 			fread(&stringData[j],1,1,dictionary);
+
 			if(stringData[j] == '\0')
 				breakPoint = j;
 		}
 		breakPoint = 0;
 		fread(&tableID,sizeof(int),1,dictionary);
 		if(strcmp(stringData,tableName) == 0)
+			printf(" string  %s name %s ",stringData,tableName);
 			return tableID;//Caso a tabela seja encontrada ele retorna o ID da mesma.
 	}
 	return -1;//Quer dizer que a tabela não foi encontrada no dicionário de dados
@@ -368,22 +370,20 @@ int insertTable(char *tableName){
 	if(dictionary == NULL)
 		return -2;//Retorna 1 se o arquivo de dicionario de dados não foi encontrado.
 	fread(&numberOfTables,sizeof(int),1,dictionary);
-	
-	printf("\n number : %d \n",numberOfTables);
 	numberOfTables=numberOfTables+1;
-	printf("\n number : %d \n",numberOfTables);
 	rewind(dictionary);
-
 	fwrite(&numberOfTables,sizeof(int),1,dictionary);
 	fseek(dictionary,0,SEEK_END);
 	//Escreve string
 	size_string=strlen(tableName);
-	strcat(tableName,"\0");
-	printf("\n size_string %d \n",size_string);
+	size_string++;
 	for(counter=0;counter<size_string; counter++){
+		printf("%d \n",tableName[counter] );
 		fwrite(&tableName[counter],sizeof(char),1,dictionary);
 	}
 	fwrite("\0",sizeof(char),1,dictionary);
+	fwrite(&numberOfTables,sizeof(int),1,dictionary);
+
 	fclose(dictionary);
 	int id=seekFiles(tableName);
 	printf("\n %d \n ",id);
