@@ -391,19 +391,21 @@ int insertTable(char *tableName){
 		printf("%d \n",tableName[counter] );
 		fwrite(&tableName[counter],sizeof(char),1,dictionary);
 	}
-	//fwrite(0,sizeof(char),1,dictionary);
 	fwrite(&numberOfTables,sizeof(int),1,dictionary);
-
+	fwrite("\n",sizeof(char),1,dictionary);
 	fclose(dictionary);
 	int id=seekFiles(tableName);
 	printf("\n %d \n ",id);
 	//Cria arquivos de meta e dados
-	char *strMeta,*strData;
+	char *strMeta="fs_metafile",*strData="fs_datafile";
 	printf("ID %d\n", id);
 	printf("\n Instancia \n");
-	sprintf(strMeta, "fs_metafile%d.dat",id);
-	printf("\n Meta \n");
-	//sprintf(strData, "fs_datafile%d.dat",id);
+	strcat(strMeta,id);
+	strcat(strMeta,".dat");
+	printf("\n %s \n",strMeta);
+	strcat(strData,id);
+	strcat(strData,".dat");
+	printf("\n %s \n",strData);
 	printf("\n data \n");
 
 	FILE *metadados = fopen(strMeta,"w+");
