@@ -393,7 +393,7 @@ int insertTable(char *tableName){
 	sprintf(strMeta, "fs_metafile%d.dat",id);
 	printf("\n passou \n");
 	sprintf(strData, "fs_datafile%d.dat",id);
-	printf("\n passou \n");
+	
 	FILE *metadados = fopen(strMeta,"w+");
 	FILE *data = fopen(strData,"w+");
 	if(metadados==NULL || data==NULL){
