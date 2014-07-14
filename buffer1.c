@@ -355,8 +355,12 @@ int seekFiles(char *tableName)
 		}
 		breakPoint = 0;
 		fread(&tableID,sizeof(int),1,dictionary);
-		if(strcmp(stringData,tableName) == 0)
+		printf("\n table ID %d \t",tableID);
+		printf("\n string a %s \t string b %s",stringData,tableName);
+		if(strcmp(stringData,tableName) == 0){
+
 			return tableID;//Caso a tabela seja encontrada ele retorna o ID da mesma.
+		}
 	}
 	return -1;//Quer dizer que a tabela não foi encontrada no dicionário de dados
 }
@@ -373,8 +377,13 @@ int insertTable(char *tableName){
 	numberOfTables++;
 	printf("\n Number of tables : %d\n ",numberOfTables);
 	rewind(dictionary);
-	//fwrite(&numberOfTables,sizeof(int),1,dictionary);
-	fseek(dictionary,0,SEEK_END);
+	fwrite(&numberOfTables,sizeof(int),1,dictionary);
+	rewind(dictionary);
+	fread(&numberOfTables,sizeof(int),1,dictionary);
+	printf("\n Number of tables : %d",numberOfTables);
+	
+	fseek(dictionary,-1,SEEK_END);
+
 	//Escreve string
 	size_string=strlen(tableName);
 	size_string++;
@@ -382,7 +391,7 @@ int insertTable(char *tableName){
 		printf("%d \n",tableName[counter] );
 		fwrite(&tableName[counter],sizeof(char),1,dictionary);
 	}
-	fwrite("\0",sizeof(char),1,dictionary);
+	//fwrite(0,sizeof(char),1,dictionary);
 	fwrite(&numberOfTables,sizeof(int),1,dictionary);
 
 	fclose(dictionary);
