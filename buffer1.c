@@ -333,6 +333,7 @@ int cpytoBuffer(buffer *b,char *tuple){
 	}
 	return -1;
 }
+
 int seekFiles(char *tableName)
 {
 	char temp[256];
@@ -349,14 +350,12 @@ int seekFiles(char *tableName)
 		for(j = 0;breakPoint == 0; j++)
 		{
 			fread(&stringData[j],1,1,dictionary);
-
 			if(stringData[j] == '\0')
 				breakPoint = j;
 		}
 		breakPoint = 0;
 		fread(&tableID,sizeof(int),1,dictionary);
 		if(strcmp(stringData,tableName) == 0)
-			printf(" string  %s name %s ",stringData,tableName);
 			return tableID;//Caso a tabela seja encontrada ele retorna o ID da mesma.
 	}
 	return -1;//Quer dizer que a tabela não foi encontrada no dicionário de dados
@@ -370,9 +369,11 @@ int insertTable(char *tableName){
 	if(dictionary == NULL)
 		return -2;//Retorna 1 se o arquivo de dicionario de dados não foi encontrado.
 	fread(&numberOfTables,sizeof(int),1,dictionary);
-	numberOfTables=numberOfTables+1;
+	printf("\n Number of tables : %d",numberOfTables);
+	numberOfTables++;
+	printf("\n Number of tables : %d\n ",numberOfTables);
 	rewind(dictionary);
-	fwrite(&numberOfTables,sizeof(int),1,dictionary);
+	//fwrite(&numberOfTables,sizeof(int),1,dictionary);
 	fseek(dictionary,0,SEEK_END);
 	//Escreve string
 	size_string=strlen(tableName);
@@ -389,13 +390,17 @@ int insertTable(char *tableName){
 	printf("\n %d \n ",id);
 	//Cria arquivos de meta e dados
 	char *strMeta,*strData;
-	printf("\n passou \n");
+	printf("ID %d\n", id);
+	printf("\n Instancia \n");
 	sprintf(strMeta, "fs_metafile%d.dat",id);
-	printf("\n passou \n");
-	sprintf(strData, "fs_datafile%d.dat",id);
-	
+	printf("\n Meta \n");
+	//sprintf(strData, "fs_datafile%d.dat",id);
+	printf("\n data \n");
+
 	FILE *metadados = fopen(strMeta,"w+");
+	printf("\n Arquivo meta \n");
 	FILE *data = fopen(strData,"w+");
+	printf("\n Arquivo data \n");
 	if(metadados==NULL || data==NULL){
 		return -3;
 		printf("\n é tetra \n");
