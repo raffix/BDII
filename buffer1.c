@@ -355,8 +355,6 @@ int seekFiles(char *tableName)
 		}
 		breakPoint = 0;
 		fread(&tableID,sizeof(int),1,dictionary);
-		printf("\n table ID %d \t",tableID);
-		printf("\n string a %s \t string b %s",stringData,tableName);
 		if(strcmp(stringData,tableName) == 0){
 
 			return tableID;//Caso a tabela seja encontrada ele retorna o ID da mesma.
@@ -368,58 +366,87 @@ int seekFiles(char *tableName)
 //Criação de arquivos de dados e metadados.
 int insertTable(char *tableName){
 	//Abra dicionario e insere nova tabela 
-	int numberOfTables,counter,size_string;
+	int numberOfTables,counter,size_string,id;
+
+	//Abra dicionario
 	FILE *dictionary = fopen("fs_dictionary.dat","r+");
 	if(dictionary == NULL)
 		return -2;//Retorna 1 se o arquivo de dicionario de dados não foi encontrado.
 	fread(&numberOfTables,sizeof(int),1,dictionary);
-	printf("\n Number of tables : %d",numberOfTables);
 	numberOfTables++;
-	printf("\n Number of tables : %d\n ",numberOfTables);
 	rewind(dictionary);
+
+	//Atualiza quantidade de tabelas
 	fwrite(&numberOfTables,sizeof(int),1,dictionary);
 	rewind(dictionary);
 	fread(&numberOfTables,sizeof(int),1,dictionary);
-	printf("\n Number of tables : %d",numberOfTables);
 	
+	//Posiciona ponteiro do arquivo
 	fseek(dictionary,-1,SEEK_END);
 
 	//Escreve string
 	size_string=strlen(tableName);
 	size_string++;
 	for(counter=0;counter<size_string; counter++){
-		printf("%d \n",tableName[counter] );
 		fwrite(&tableName[counter],sizeof(char),1,dictionary);
 	}
 	fwrite(&numberOfTables,sizeof(int),1,dictionary);
 	fwrite("\n",sizeof(char),1,dictionary);
 	fclose(dictionary);
-	int id=seekFiles(tableName);
-	printf("\n %d \n ",id);
+	
+	//Procura o indice da nova tabela
+	id=seekFiles(tableName);
+	char indice[6];
+	convert(id,indice); //Converte 
 	//Cria arquivos de meta e dados
-	char *strMeta="fs_metafile",*strData="fs_datafile";
-	printf("ID %d\n", id);
-	printf("\n Instancia \n");
-	strcat(strMeta,id);
-	strcat(strMeta,".dat");
+	
+	//Metadados
+	char * strMeta;
+	strcpy(strMeta,"fs_metafile");
+	strcat(strMeta,indice);
 	printf("\n %s \n",strMeta);
-	strcat(strData,id);
-	strcat(strData,".dat");
-	printf("\n %s \n",strData);
-	printf("\n data \n");
+	strcat(strMeta,".dat\0");
+	printf("\n %s \n",strMeta);
 
+	//Dados ou tabela propriamente
+	char * strData;
+	strcpy(strData,"fs_datafile");
+	strcat(strData,indice);
+	printf("\n %s \n",strData);
+	strcat(strData,".dat\0");
+	printf("\n %s \n",strData);
+
+	printf("\n Arquivo meta \n");
+	//Cria arquivos
+
+	
 	FILE *metadados = fopen(strMeta,"w+");
 	printf("\n Arquivo meta \n");
 	FILE *data = fopen(strData,"w+");
 	printf("\n Arquivo data \n");
 	if(metadados==NULL || data==NULL){
-		return -3;
+		return -3; //Arquivos não foram criados abort
 		printf("\n é tetra \n");
 	}
 	printf("\n passou \n");
 	fclose(metadados);
-
 	fclose(data);
+	
 	return id;
 	//retorna o indice da tabela
+}
+
+void convert(int value, char * string){
+	int rest;
+	string[0]=value/100000+48;
+	rest=value%100000;
+	string[1]=rest/10000+48;
+	rest=value%10000;
+	string[2]=rest/1000+48;
+	rest=value%1000;
+	string[3]=rest/100+48;
+	rest=value%100;
+	string[4]=rest/10+48;
+	rest=value%10;
+	string[5]=rest+48;
 }

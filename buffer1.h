@@ -57,3 +57,4 @@ int seekFiles(char *tableName);//Localiza qual o ID da tabela, para abrir os arq
 //Funções para criação de tabelas
 
 int insertTable(char *tableName); //Cria arquivos de dados e metadados 
+void convert(int value, char * string); //Converte inteiro menor que 999999 para uma string de tamanho 6
