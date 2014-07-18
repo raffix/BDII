@@ -401,23 +401,17 @@ int insertTable(char *tableName){
 	//Cria arquivos de meta e dados
 	
 	//Metadados
-	char * strMeta;
-	strcpy(strMeta,"fs_metafile");
-	strcat(strMeta,indice);
-	printf("\n %s \n",strMeta);
-	strcat(strMeta,".dat\0");
+	char strMeta[22];
+	cria_string(strMeta,indice,1); //Cria a string para o nome do arquivo e qualquer numero diferente de 0 é usado para metadados
 	printf("\n %s \n",strMeta);
 
 	//Dados ou tabela propriamente
-	char * strData;
-	strcpy(strData,"fs_datafile");
-	strcat(strData,indice);
-	printf("\n %s \n",strData);
-	strcat(strData,".dat\0");
+	char strData[22];
+	cria_string(strData,indice,0);
 	printf("\n %s \n",strData);
 
-	printf("\n Arquivo meta \n");
 	//Cria arquivos
+
 
 	
 	FILE *metadados = fopen(strMeta,"w+");
@@ -449,4 +443,34 @@ void convert(int value, char * string){
 	string[4]=rest/10+48;
 	rest=value%10;
 	string[5]=rest+48;
+}
+
+void cria_string(char * archive, char * value,int type){
+	archive[0]='f';
+	archive[1]='s';
+	archive[2]='_';
+	if(type==0){
+		archive[3]='d';
+		archive[4]='a';	
+	}else {
+		archive[3]='m';
+		archive[4]='e';	
+	}
+	archive[5]='t';
+	archive[6]='a';
+	archive[7]='f';
+	archive[8]='i';
+	archive[9]='l';
+	archive[10]='e';
+	archive[11]=value[0];
+	archive[12]=value[1];
+	archive[13]=value[2];
+	archive[14]=value[3];
+	archive[15]=value[4];
+	archive[16]=value[5];
+	archive[17]='.';
+	archive[18]='d';
+	archive[19]='a';
+	archive[20]='t';
+	archive[21]=0;
 }
