@@ -12,19 +12,20 @@ int main(int argc, char *argv[]){
 	bufpool=(buffer*)malloc(sizeof(buffer)*NUMP); //Aloca bufferpool com o Tamanho da constante NUMP
 	inicializaBuffer(bufpool);//os valores da estrutura sao inicializados 
 	int fileIndex = seekFiles(nomeTabela);//Procura indice para abrir os arquivos da tabela
-	if(fileIndex==-1){
-		fileIndex=insertTable(nomeTabela);
-	}
+
 	if(fileIndex < 0)
 	{
-		if(fileIndex == -1)
+		if(fileIndex == -1) {
 			printf("Tabela '%s' nao encontrada no dicionario de dados\n",nomeTabela);
-		else if(fileIndex == -2)
+		}else if(fileIndex == -2){
 			printf("O arquivo de dicionario de dados 'fs_dictionary.dat' nao foi encontrado\n");
+		}
+		fileIndex=insertTable(nomeTabela);
+		printf("\n Tabela criada \n");	
 	}
 	else
 	{
-		char indice [6];
+		char indice [7];
 		convert(fileIndex,indice);
 		char strMeta[22],strData[22];
 		cria_string(strMeta,indice,1);
@@ -32,8 +33,10 @@ int main(int argc, char *argv[]){
 		bufferpool(bufpool,strMeta,strData);//Chama bufferpool com os arquivos devidos de metadados e dados
 		//O código abaixo imprime as 8 primeiras páginas do buffer apenas para teste
 		int i;
-		for(i = 0; i < 8; i++)
-			printBuffer(bufpool,0,i);
+		//for(i = 0; i < 8; i++)
+		//	printBuffer(bufpool,0,i);
 	}	
+
+	
 	return 0;
 }

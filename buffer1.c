@@ -364,14 +364,16 @@ int seekFiles(char *tableName)
 }
 
 //Criação de arquivos de dados e metadados.
-int insertTable(char *tableName){
-	//Abra dicionario e insere nova tabela 
+int insertTable(char *tableName){ 	//Abra dicionario e insere nova tabela 
+	
 	int numberOfTables,counter,size_string,id;
 
-	//Abra dicionario
+//Abre dicionario
 	FILE *dictionary = fopen("fs_dictionary.dat","r+");
-	if(dictionary == NULL)
-		return -2;//Retorna 1 se o arquivo de dicionario de dados não foi encontrado.
+	if(dictionary == NULL){
+		return -2;//Retorna se o arquivo de dicionario de dados não foi encontrado.
+	}
+
 	fread(&numberOfTables,sizeof(int),1,dictionary);
 	numberOfTables++;
 	rewind(dictionary);
@@ -394,40 +396,32 @@ int insertTable(char *tableName){
 	fwrite("\n",sizeof(char),1,dictionary);
 	fclose(dictionary);
 	
-	//Procura o indice da nova tabela
+//Procura o indice da nova tabela
 	id=seekFiles(tableName);
-	char indice[6];
+	char indice[7];
 	convert(id,indice); //Converte 
-	//Cria arquivos de meta e dados
+
+//Cria arquivos de meta e dados
 	
 	//Metadados
-	char strMeta[22];
+	char strMeta[30];
 	cria_string(strMeta,indice,1); //Cria a string para o nome do arquivo e qualquer numero diferente de 0 é usado para metadados
-	printf("\n %s \n",strMeta);
 
 	//Dados ou tabela propriamente
-	char strData[22];
+	char strData[30];
 	cria_string(strData,indice,0);
-	printf("\n %s \n",strData);
 
-	//Cria arquivos
-
-
-	
+	//Cria arquivos	
 	FILE *metadados = fopen(strMeta,"w+");
-	printf("\n Arquivo meta \n");
 	FILE *data = fopen(strData,"w+");
-	printf("\n Arquivo data \n");
 	if(metadados==NULL || data==NULL){
 		return -3; //Arquivos não foram criados abort
-		printf("\n é tetra \n");
 	}
-	printf("\n passou \n");
 	fclose(metadados);
 	fclose(data);
 	
-	return id;
-	//retorna o indice da tabela
+	return id; 	//retorna o indice da tabela
+
 }
 
 void convert(int value, char * string){
@@ -446,31 +440,43 @@ void convert(int value, char * string){
 }
 
 void cria_string(char * archive, char * value,int type){
-	archive[0]='f';
-	archive[1]='s';
-	archive[2]='_';
+	archive[0]=0;
+	value[6]=0;
+
 	if(type==0){
-		archive[3]='d';
-		archive[4]='a';	
-	}else {
-		archive[3]='m';
-		archive[4]='e';	
+		strcpy(archive,"fs_datafile\0");
+		strcat(archive,value);
+		strcat(archive,".dat\0");
+	}else{
+		strcpy(archive,"fs_metafile\0");
+		strcat(archive,value);
+		strcat(archive,".dat\0");
 	}
-	archive[5]='t';
-	archive[6]='a';
-	archive[7]='f';
-	archive[8]='i';
-	archive[9]='l';
-	archive[10]='e';
-	archive[11]=value[0];
-	archive[12]=value[1];
-	archive[13]=value[2];
-	archive[14]=value[3];
-	archive[15]=value[4];
-	archive[16]=value[5];
-	archive[17]='.';
-	archive[18]='d';
-	archive[19]='a';
-	archive[20]='t';
-	archive[21]=0;
+}
+
+
+//Insere metadados 
+
+int insertMeta(char * tableName,int start,int end){
+	int counter,bcounter,id = seekFiles(tableName),size=0;
+	char index[6],strMeta[22];
+	
+	convert(id,index);
+	cria_string(strMeta,index,2);
+	FILE *metadados = fopen(strMeta,"w");
+	if(metadados==NULL){
+		return -1; // Apocalypse 
+	}
+	size=(end-start)+1;
+	fwrite(&size,sizeof(int),1,metadados);
+	
+	for(counter=start;counter<=end;counter++){
+		for(bcounter=0;vr[bcounter].nome !='\0';bcounter++){
+			fwrite(&vr[bcounter].nome,sizeof(char),1,metadados);
+		}
+		fwrite("\0",sizeof(char),1,metadados);
+		fwrite(&vr[counter].tipo,sizeof(char),1,metadados);
+		fwrite(&vr[counter].tam,sizeof(int),1,metadados);
+	}
+	return id;
 }
