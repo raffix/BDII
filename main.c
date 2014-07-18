@@ -24,9 +24,11 @@ int main(int argc, char *argv[]){
 	}
 	else
 	{
-		char strMeta[50],strData[50];
-		sprintf(strMeta, "fs_metafile%d.dat",fileIndex);
-		sprintf(strData, "fs_datafile%d.dat",fileIndex);
+		char indice [6];
+		convert(fileIndex,indice);
+		char strMeta[22],strData[22];
+		cria_string(strMeta,indice,1);
+		cria_string(strData,indice,0);
 		bufferpool(bufpool,strMeta,strData);//Chama bufferpool com os arquivos devidos de metadados e dados
 		//O código abaixo imprime as 8 primeiras páginas do buffer apenas para teste
 		int i;
