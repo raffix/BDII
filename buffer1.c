@@ -478,5 +478,44 @@ int insertMeta(char * tableName,int start,int end){
 		fwrite(&vr[counter].tipo,sizeof(char),1,metadados);
 		fwrite(&vr[counter].tam,sizeof(int),1,metadados);
 	}
+	fclose(metadados);
 	return id;
+}
+
+
+void funcao_teste(){
+
+    union dados *dataTupla;
+
+    dataTupla[0].c = 'd';
+    strcat(dataTupla[0].palavra,"teste");
+    dataTupla[0].valord = 1.304332;
+
+    escreve_dados(dataTupla,"tabela.dat",0,1);
+
+}
+
+void escreve_dados(union dados *dataTupla, char *nometabela, int inicio, int fim){
+
+    FILE *arquivo = fopen(nometabela,"w");
+    int tipo,cont,tam;
+
+    for(cont=inicio;cont<fim;cont++){
+        if(vr[cont].tipo == 'd'){       //double
+            printf("\nTeste %lf", dataTupla[cont].valord);
+            fwrite(&dataTupla[cont].valord,sizeof(double),1,arquivo);
+        }
+        else if(vr[cont].tipo == 's'){  //string
+            tam = strlen(dataTupla[0].palavra);
+           fwrite(&dataTupla[cont].palavra,(sizeof(char)*tam),1,arquivo);
+        }
+        else if(vr[cont].tipo == 'i'){  //int
+           fwrite(&dataTupla[cont].valori,sizeof(int),1,arquivo);
+        }
+        else {                          //char
+            fwrite(&dataTupla[cont].c,sizeof(char),1,arquivo);
+        }
+    }
+    fclose(arquivo);
+
 }
